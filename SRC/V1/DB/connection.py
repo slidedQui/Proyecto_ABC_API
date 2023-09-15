@@ -8,15 +8,25 @@ class conexion(): #conexion a la base de datos
         try:
             self.conn = psycopg2.connect(
                 host='localhost',
-                database='PruebaDataBase',
+                database='postgres',
                 user='postgres',
                 password='1234',
-                port= '5433'
+                port= '5432'
             )
             self.cur = self.conn.cursor()
             print("Conexión exitosa a la base de datos")
         except (Exception, psycopg2.Error) as error:
             print("Error al conectar a la base de datos:", error)
+
+    def ejecutarprocedure(self,proc:str):
+        try:
+            self.cur.callproc(proc)
+            self.conn.commit()
+            rows = self.cur.fetchall()
+            return rows
+        except (Exception, psycopg2.Error) as error:
+            print("Error al ejecutar la consulta:", error)
+
 
     def ejecutarquery(self,query:str):
         try:
